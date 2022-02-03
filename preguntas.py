@@ -12,7 +12,6 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
-
 def pregunta_01():
     """
     Retorne la suma de la segunda columna.
@@ -21,7 +20,10 @@ def pregunta_01():
     214
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+
+    return sum([int(var.strip().split('\t')[1]) for var in datos])
 
 
 def pregunta_02():
@@ -39,7 +41,15 @@ def pregunta_02():
     ]
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+    
+    datos = list([(var.strip().split('\t')[0]) for var in datos])
+    col1 = list(dict.fromkeys(datos))
+    col1.sort()
+    res = list()
+    [res.append((x, datos.count(x))) for x in col1]
+    return res
 
 
 def pregunta_03():
@@ -57,7 +67,20 @@ def pregunta_03():
     ]
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+    
+    datos = [(var.strip().split('\t')[0:2]) for var in datos]
+    col1 = sorted((list(set([var[0] for var in datos]))))
+    res = list()
+
+    for letra in col1:
+        sum = 0
+        for camp in datos:
+            if camp[0] == letra:
+                sum += int(camp[1])
+        res.append((letra, sum))
+    return res
 
 
 def pregunta_04():
@@ -82,7 +105,15 @@ def pregunta_04():
     ]
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+
+    datos = list([(var.strip().split('\t')[2][5:7]) for var in datos])
+    col1 = list(dict.fromkeys(datos))
+    col1.sort()
+    res = list()
+    [res.append((x, datos.count(x))) for x in col1]
+    return res
 
 
 def pregunta_05():
@@ -100,12 +131,26 @@ def pregunta_05():
     ]
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+
+    datos = [(var.strip().split('\t')[0:2]) for var in datos]
+    col1 = sorted((list(set([var[0] for var in datos]))))
+    res = list()
+
+    for letra in col1:
+        nums = list()
+        for camp in datos:
+            if camp[0] == letra:
+                nums.append(int(camp[1]))
+        res.append((letra, max(nums), min(nums)))
+        
+    return res
 
 
 def pregunta_06():
     """
-    La columna 5 codifica un diccionario donde cada cadena de tres letras corresponde a
+    La columna 5 codifica un diccionario donde cada cadena de tres col1 corresponde a
     una clave y el valor despues del caracter `:` corresponde al valor asociado a la
     clave. Por cada clave, obtenga el valor asociado mas pequeño y el valor asociado mas
     grande computados sobre todo el archivo.
@@ -131,7 +176,7 @@ def pregunta_06():
 def pregunta_07():
     """
     Retorne una lista de tuplas que asocien las columnas 0 y 1. Cada tupla contiene un
-    valor posible de la columna 2 y una lista con todas las letras asociadas (columna 1)
+    valor posible de la columna 2 y una lista con todas las col1 asociadas (columna 1)
     a dicho valor de la columna 2.
 
     Rta/
@@ -155,7 +200,7 @@ def pregunta_07():
 def pregunta_08():
     """
     Genere una lista de tuplas, donde el primer elemento de cada tupla contiene  el valor
-    de la segunda columna; la segunda parte de la tupla es una lista con las letras
+    de la segunda columna; la segunda parte de la tupla es una lista con las col1
     (ordenadas y sin repetir letra) de la primera  columna que aparecen asociadas a dicho
     valor de la segunda columna.
 

@@ -144,13 +144,13 @@ def pregunta_05():
             if camp[0] == letra:
                 nums.append(int(camp[1]))
         res.append((letra, max(nums), min(nums)))
-        
+
     return res
 
 
 def pregunta_06():
     """
-    La columna 5 codifica un diccionario donde cada cadena de tres col1 corresponde a
+    La columna 5 codifica un diccionario donde cada cadena de tres letras corresponde a
     una clave y el valor despues del caracter `:` corresponde al valor asociado a la
     clave. Por cada clave, obtenga el valor asociado mas pequeño y el valor asociado mas
     grande computados sobre todo el archivo.
@@ -170,13 +170,29 @@ def pregunta_06():
     ]
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+
+    datos = [(var.strip().split('\t')[4]) for var in datos]
+    datos = ','.join(datos).split(',')
+    datos = [var.split(':') for var in datos]
+    keys = sorted((list(set([var[0] for var in datos]))))
+    res = list()
+
+    for key in keys:
+        values = list()
+        for camp in datos:
+            if camp[0] == key:
+                values.append(int(camp[1]))
+        res.append((key, min(values), max(values)))
+        
+    return res
 
 
 def pregunta_07():
     """
     Retorne una lista de tuplas que asocien las columnas 0 y 1. Cada tupla contiene un
-    valor posible de la columna 2 y una lista con todas las col1 asociadas (columna 1)
+    valor posible de la columna 2 y una lista con todas las letras asociadas (columna 1)
     a dicho valor de la columna 2.
 
     Rta/
@@ -194,13 +210,27 @@ def pregunta_07():
     ]
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+            datos = datos.readlines()
+
+    datos = [(var.strip().split('\t')[0:2]) for var in datos]
+    col2 = sorted(list(set([int(var[1]) for var in datos])))
+    res = list()
+
+    for num in col2:
+        letras = list()
+        for camp in datos:
+            if int(camp[1]) == num:
+                letras.append(camp[0])
+        res.append((int(num), letras))
+        
+    return res
 
 
 def pregunta_08():
     """
     Genere una lista de tuplas, donde el primer elemento de cada tupla contiene  el valor
-    de la segunda columna; la segunda parte de la tupla es una lista con las col1
+    de la segunda columna; la segunda parte de la tupla es una lista con las letras
     (ordenadas y sin repetir letra) de la primera  columna que aparecen asociadas a dicho
     valor de la segunda columna.
 
@@ -219,7 +249,21 @@ def pregunta_08():
     ]
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+            datos = datos.readlines()
+
+    datos = [(var.strip().split('\t')[0:2]) for var in datos]
+    col2 = sorted(list(set([int(var[1]) for var in datos])))
+    res = list()
+
+    for num in col2:
+        letras_uniq = list()
+        for camp in datos:
+            if int(camp[1]) == num:
+                letras_uniq.append(camp[0])
+        res.append((int(num), sorted(list(set(letras_uniq)))))
+
+    return res
 
 
 def pregunta_09():
@@ -242,7 +286,19 @@ def pregunta_09():
     }
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+
+    datos = [(var.strip().split('\t')[4]) for var in datos]
+    datos = ','.join(datos).split(',')
+    datos = [var.split(':')[0] for var in datos]
+    keys = sorted(list(set(datos)))
+    res = dict()
+
+    for key in keys:
+        res[key] = datos.count(key)
+
+    return res
 
 
 def pregunta_10():
@@ -263,7 +319,18 @@ def pregunta_10():
 
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+
+    datos = [var.strip().split('\t') for var in datos]
+    for elem in datos:
+        del elem[1]
+        del elem[1]
+        elem[1] = len(elem[1].split(','))
+        elem[2] = len(elem[2].split(','))
+    res = [tuple(var) for var in datos]
+
+    return res
 
 
 def pregunta_11():
@@ -284,7 +351,24 @@ def pregunta_11():
 
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+
+    original = datos.copy()
+    original = [var.strip().split('\t') for var in original]
+    datos = [var.strip().split('\t')[3] for var in datos]
+    datos = ','.join(datos).split(',')
+    col4 = sorted(list(set(datos)))
+    res = dict()
+
+    for letra in col4:
+        sum = 0
+        for camp in original:
+            if letra in camp[3]:
+                sum += int(camp[1])
+        res[letra] = sum
+        
+    return res
 
 
 def pregunta_12():
@@ -302,4 +386,28 @@ def pregunta_12():
     }
 
     """
-    return
+    with open('data.csv', mode='r') as datos:
+        datos = datos.readlines()
+
+    datos = [var.strip().split('\t') for var in datos]
+
+    res = {}
+
+    for dato in datos:
+        arr = []
+        letra = dato[0]
+
+        for sub in dato[4].split(','):
+
+            if ':' in sub:
+                arr.append(map(str.strip, sub.split(':', 1)))
+        arr = dict(arr)
+        arr = dict([x, int(y)] for x, y in arr.items())
+        suma = sum(arr.values())
+        if letra in res:
+            res[letra] += suma
+        else:
+            res[letra] = suma
+
+    res = dict(sorted(res.items()))
+    return res
